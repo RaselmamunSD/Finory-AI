@@ -1,0 +1,314 @@
+{
+	"info": {
+		"name": "Finory IA API",
+		"description": "Complete API collection for Finory IA - Next Generation Financial Intelligence Platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"company_name\": \"My Company\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "register", ""]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login", ""]
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/refresh/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "refresh", ""]
+						}
+					}
+				},
+				{
+					"name": "Verify 2FA",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{access_token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/verify-2fa/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "verify-2fa", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Companies",
+			"item": [
+				{
+					"name": "List Companies",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/companies/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "companies", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Company",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New Company\",\n  \"tax_id\": \"123456789\",\n  \"country\": \"USA\",\n  \"currency\": \"USD\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/companies/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "companies", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Sales",
+			"item": [
+				{
+					"name": "List Customers",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/sales/customers/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sales", "customers", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Customer Name\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"credit_limit\": \"10000.00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/sales/customers/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sales", "customers", ""]
+						}
+					}
+				},
+				{
+					"name": "List Invoices",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/sales/invoices/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sales", "invoices", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Invoice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": \"{{customer_id}}\",\n  \"invoice_number\": \"INV-001\",\n  \"date\": \"2026-01-22\",\n  \"due_date\": \"2026-02-22\",\n  \"subtotal\": \"1000.00\",\n  \"tax\": \"100.00\",\n  \"total\": \"1100.00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/sales/invoices/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sales", "invoices", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "List Products",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventory/products/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventory", "products", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sku\": \"PROD-001\",\n  \"name\": \"Product Name\",\n  \"description\": \"Product Description\",\n  \"unit_of_measure\": \"unit\",\n  \"cost_method\": \"average\",\n  \"reorder_point\": \"10.00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventory/products/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventory", "products", ""]
+						}
+					}
+				},
+				{
+					"name": "List Stock",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventory/stock/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventory", "stock", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Accounting",
+			"item": [
+				{
+					"name": "List Chart of Accounts",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/accounting/accounts/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "accounting", "accounts", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Journal Entry",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"entry_number\": \"JE-001\",\n  \"date\": \"2026-01-22\",\n  \"description\": \"Journal Entry Description\",\n  \"source_type\": \"manual\",\n  \"status\": \"draft\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/accounting/journal-entries/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "accounting", "journal-entries", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "AI Engine",
+			"item": [
+				{
+					"name": "List AI Predictions",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ai/predictions/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ai", "predictions", ""]
+						}
+					}
+				},
+				{
+					"name": "List AI Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ai/recommendations/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ai", "recommendations", ""]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
