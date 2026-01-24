@@ -9,10 +9,17 @@ from .serializers import IdentitySerializer, FaceVerificationSerializer
 class IdentityViewSet(viewsets.ModelViewSet):
     serializer_class = IdentitySerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Identity.objects.all()
+    
+    def get_queryset(self):
+        return Identity.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class FaceVerificationViewSet(viewsets.ModelViewSet):
     serializer_class = FaceVerificationSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = FaceVerification.objects.all()
+    
+    def get_queryset(self):
+        return FaceVerification.objects.filter(identity__user=self.request.user)

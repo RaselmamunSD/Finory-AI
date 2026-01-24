@@ -15,12 +15,45 @@
 						"header": [{"key": "Content-Type", "value": "application/json"}],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"company_name\": \"My Company\"\n}"
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\",\n  \"company_name\": \"My Company\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/register/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "register", ""]
+						}
+					}
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{access_token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"otp_code\": \"1234\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/verify-email/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "verify-email", ""]
+						}
+					}
+				},
+				{
+					"name": "Resend OTP",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/resend-otp/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "resend-otp", ""]
 						}
 					}
 				},
@@ -31,7 +64,7 @@
 						"header": [{"key": "Content-Type", "value": "application/json"}],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"two_factor_code\": \"\"\n}"
 						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/auth/login/",
@@ -57,7 +90,21 @@
 					}
 				},
 				{
-					"name": "Verify 2FA",
+					"name": "Setup 2FA",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/setup-2fa/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "setup-2fa", ""]
+						}
+					}
+				},
+				{
+					"name": "Enable 2FA",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -69,9 +116,77 @@
 							"raw": "{\n  \"code\": \"123456\"\n}"
 						},
 						"url": {
-							"raw": "{{base_url}}/api/v1/auth/verify-2fa/",
+							"raw": "{{base_url}}/api/v1/auth/enable-2fa/",
 							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "auth", "verify-2fa", ""]
+							"path": ["api", "v1", "auth", "enable-2fa", ""]
+						}
+					}
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/forgot-password/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "forgot-password", ""]
+						}
+					}
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"otp_code\": \"123456\",\n  \"new_password\": \"newpassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/reset-password/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "reset-password", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/me/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "me", ""]
+						}
+					}
+				},
+				{
+					"name": "Update My Profile",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"full_name\": \"Updated Name\",\n  \"phone\": \"+1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/me/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "me", ""]
 						}
 					}
 				}
@@ -85,25 +200,6 @@
 					"request": {
 						"method": "GET",
 						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/companies/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "companies", ""]
-						}
-					}
-				},
-				{
-					"name": "Create Company",
-					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Authorization", "value": "Bearer {{access_token}}"},
-							{"key": "Content-Type", "value": "application/json"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"New Company\",\n  \"tax_id\": \"123456789\",\n  \"country\": \"USA\",\n  \"currency\": \"USD\"\n}"
-						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/companies/",
 							"host": ["{{base_url}}"],
@@ -129,25 +225,6 @@
 					}
 				},
 				{
-					"name": "Create Customer",
-					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Authorization", "value": "Bearer {{access_token}}"},
-							{"key": "Content-Type", "value": "application/json"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"name\": \"Customer Name\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"credit_limit\": \"10000.00\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/sales/customers/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "sales", "customers", ""]
-						}
-					}
-				},
-				{
 					"name": "List Invoices",
 					"request": {
 						"method": "GET",
@@ -158,23 +235,21 @@
 							"path": ["api", "v1", "sales", "invoices", ""]
 						}
 					}
-				},
+				}
+			]
+		},
+		{
+			"name": "Purchases",
+			"item": [
 				{
-					"name": "Create Invoice",
+					"name": "List Suppliers",
 					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Authorization", "value": "Bearer {{access_token}}"},
-							{"key": "Content-Type", "value": "application/json"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"customer\": \"{{customer_id}}\",\n  \"invoice_number\": \"INV-001\",\n  \"date\": \"2026-01-22\",\n  \"due_date\": \"2026-02-22\",\n  \"subtotal\": \"1000.00\",\n  \"tax\": \"100.00\",\n  \"total\": \"1100.00\"\n}"
-						},
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
 						"url": {
-							"raw": "{{base_url}}/api/v1/sales/invoices/",
+							"raw": "{{base_url}}/api/v1/purchases/suppliers/",
 							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "sales", "invoices", ""]
+							"path": ["api", "v1", "purchases", "suppliers", ""]
 						}
 					}
 				}
@@ -188,25 +263,6 @@
 					"request": {
 						"method": "GET",
 						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/inventory/products/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "inventory", "products", ""]
-						}
-					}
-				},
-				{
-					"name": "Create Product",
-					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Authorization", "value": "Bearer {{access_token}}"},
-							{"key": "Content-Type", "value": "application/json"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"sku\": \"PROD-001\",\n  \"name\": \"Product Name\",\n  \"description\": \"Product Description\",\n  \"unit_of_measure\": \"unit\",\n  \"cost_method\": \"average\",\n  \"reorder_point\": \"10.00\"\n}"
-						},
 						"url": {
 							"raw": "{{base_url}}/api/v1/inventory/products/",
 							"host": ["{{base_url}}"],
@@ -242,23 +298,89 @@
 							"path": ["api", "v1", "accounting", "accounts", ""]
 						}
 					}
-				},
+				}
+			]
+		},
+		{
+			"name": "Banking",
+			"item": [
 				{
-					"name": "Create Journal Entry",
+					"name": "List Bank Accounts",
 					"request": {
-						"method": "POST",
-						"header": [
-							{"key": "Authorization", "value": "Bearer {{access_token}}"},
-							{"key": "Content-Type", "value": "application/json"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"entry_number\": \"JE-001\",\n  \"date\": \"2026-01-22\",\n  \"description\": \"Journal Entry Description\",\n  \"source_type\": \"manual\",\n  \"status\": \"draft\"\n}"
-						},
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
 						"url": {
-							"raw": "{{base_url}}/api/v1/accounting/journal-entries/",
+							"raw": "{{base_url}}/api/v1/banking/accounts/",
 							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "accounting", "journal-entries", ""]
+							"path": ["api", "v1", "banking", "accounts", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "CRM",
+			"item": [
+				{
+					"name": "List Leads",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/crm/leads/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "crm", "leads", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "HR",
+			"item": [
+				{
+					"name": "List Employees",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/hr/employees/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "hr", "employees", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "List Identities",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/identity/identities/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "identity", "identities", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Legal",
+			"item": [
+				{
+					"name": "List Incidents",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"url": {
+							"raw": "{{base_url}}/api/v1/legal/incidents/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "legal", "incidents", ""]
 						}
 					}
 				}
@@ -278,16 +400,21 @@
 							"path": ["api", "v1", "ai", "predictions", ""]
 						}
 					}
-				},
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
 				{
-					"name": "List AI Recommendations",
+					"name": "List Dashboards",
 					"request": {
 						"method": "GET",
 						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
 						"url": {
-							"raw": "{{base_url}}/api/v1/ai/recommendations/",
+							"raw": "{{base_url}}/api/v1/analytics/dashboards/",
 							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "ai", "recommendations", ""]
+							"path": ["api", "v1", "analytics", "dashboards", ""]
 						}
 					}
 				}

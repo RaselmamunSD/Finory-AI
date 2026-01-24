@@ -8,8 +8,8 @@ from .models import Company, Branch, User, Role, CompanyUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone', 'status', 'is_2fa_enabled', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = ['id', 'email', 'full_name', 'phone', 'status', 'is_email_verified', 'is_2fa_enabled', 'created_at']
+        read_only_fields = ['id', 'is_email_verified', 'created_at']
 
 
 class CompanySerializer(serializers.ModelSerializer):

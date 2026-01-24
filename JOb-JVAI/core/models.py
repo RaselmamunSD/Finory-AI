@@ -34,7 +34,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, validators=[EmailValidator()])
+    full_name = models.CharField(max_length=255, null=True, blank=True)
     phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
+    
+    # Email Verification
+    is_email_verified = models.BooleanField(default=False)
+    otp_code = models.CharField(max_length=4, null=True, blank=True)
+    otp_expiry = models.DateTimeField(null=True, blank=True)
+    
+    # Password Reset
+    password_reset_otp = models.CharField(max_length=6, null=True, blank=True)
+    password_reset_otp_expiry = models.DateTimeField(null=True, blank=True)
     
     # Authentication
     is_2fa_enabled = models.BooleanField(default=False)
@@ -78,6 +88,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return self.email
+
+    def generate_otp(self):
+        """Generate a 4-digit OTP and set expiry (10 minutes)"""
+        import random
+        self.otp_code = str(random.randint(1000, 9999))
+        self.otp_expiry = timezone.now() + timezone.timedelta(minutes=10)
+        self.save()
+        return self.otp_code
+
+    def generate_password_reset_otp(self):
+        """Generate a 6-digit OTP for password reset and set expiry (15 minutes)"""
+        import random
+        self.password_reset_otp = str(random.randint(100000, 999999))
+        self.password_reset_otp_expiry = timezone.now() + timezone.timedelta(minutes=15)
+        self.save()
+        return self.password_reset_otp
 
 
 class Company(models.Model):

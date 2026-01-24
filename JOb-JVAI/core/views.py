@@ -64,6 +64,31 @@ class UserViewSet(viewsets.ModelViewSet):
         user_ids = CompanyUser.objects.filter(company_id__in=company_ids).values_list('user_id', flat=True)
         return User.objects.filter(id__in=user_ids)
 
+    @action(detail=False, methods=['get', 'put', 'patch'], permission_classes=[permissions.IsAuthenticated])
+    def me(self, request):
+        """
+        Get or update current user profile
+        """
+        user = request.user
+        if request.method == 'GET':
+            serializer = self.get_serializer(user)
+            return Response({
+                'success': True,
+                'data': serializer.data
+            })
+        
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({
+                'success': True,
+                'data': serializer.data
+            })
+        return Response({
+            'success': False,
+            'error': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
 
 class RoleViewSet(viewsets.ModelViewSet):
     """
