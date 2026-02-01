@@ -76,6 +76,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
+                'django.template.context_processors.csrf',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -86,10 +87,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'finory_ia.wsgi.application'
 
 # Database
+# Store SQLite in LOCALAPPDATA to avoid disk I/O errors from cloud sync (OneDrive etc.)
+# and paths with spaces. On non-Windows, uses project dir.
+_sqlite_dir = os.environ.get('LOCALAPPDATA', str(BASE_DIR))
+_db_path = os.path.join(_sqlite_dir, 'FinoryAI', 'db.sqlite3')
+if _sqlite_dir != str(BASE_DIR):
+    os.makedirs(os.path.dirname(_db_path), exist_ok=True)
+else:
+    _db_path = str(BASE_DIR / 'db.sqlite3')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': _db_path,
+        'OPTIONS': {
+            'timeout': 20,
+        }
     }
 }
 
@@ -118,7 +131,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+_static_dir = BASE_DIR / 'static'
+STATICFILES_DIRS = [str(_static_dir)] if _static_dir.exists() else []
 
 # Media files
 MEDIA_URL = 'media/'
@@ -186,16 +200,19 @@ CORS_ALLOWED_ORIGINS = config(
 )
 CORS_ALLOW_CREDENTIALS = True
 
-# Cache Configuration
+# Cache Configuration (Redis optional; use dummy cache if Redis unavailable)
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
         'LOCATION': config('CACHE_URL', default='redis://127.0.0.1:6379/1'),
-    }
+    },
+    'dummy': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
 }
 
-# Session Configuration to use Cache
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+# Session: use database so admin works without Redis; set SESSION_ENGINE=cache for production
+SESSION_ENGINE = config('SESSION_ENGINE', default='django.contrib.sessions.backends.db')
 SESSION_CACHE_ALIAS = "default"
 
 # Celery Configuration (for async AI tasks)
@@ -217,7 +234,9 @@ ENCRYPTION_KEY = config('ENCRYPTION_KEY', default='dev-encryption-key-change-in-
 AI_ENABLED = config('AI_ENABLED', default=True, cast=bool)
 AI_AUTONOMOUS_MODE_DEFAULT = config('AI_AUTONOMOUS_MODE_DEFAULT', default=False, cast=bool)
 
-# Logging
+# Logging (ensure logs dir exists so file handler works)
+_logs_dir = BASE_DIR / 'logs'
+os.makedirs(_logs_dir, exist_ok=True)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -238,7 +257,7 @@ LOGGING = {
         },
         'file': {
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'finory_ia.log',
+            'filename': str(_logs_dir / 'finory_ia.log'),
             'formatter': 'json',
         },
     },

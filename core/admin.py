@@ -1,13 +1,45 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm, UserCreationForm as BaseUserCreationForm
 from .models import User, Company, Branch, Role, CompanyUser, AuditLog
 
 
+class UserCreationForm(BaseUserCreationForm):
+    class Meta(BaseUserCreationForm.Meta):
+        model = User
+        fields = ('email',)
+
+
+class UserChangeForm(BaseUserChangeForm):
+    class Meta(BaseUserChangeForm.Meta):
+        model = User
+        fields = '__all__'
+
+
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['email', 'phone', 'status', 'is_2fa_enabled', 'created_at']
-    list_filter = ['status', 'is_2fa_enabled', 'created_at']
-    search_fields = ['email', 'phone']
+class UserAdmin(BaseUserAdmin):
+    form = UserChangeForm
+    add_form = UserCreationForm
+    list_display = ['email', 'full_name', 'phone', 'status', 'is_staff', 'is_2fa_enabled', 'created_at']
+    list_filter = ['status', 'is_staff', 'is_2fa_enabled', 'created_at']
+    search_fields = ['email', 'phone', 'full_name']
+    ordering = ['email']
     readonly_fields = ['id', 'created_at', 'updated_at', 'last_login']
+
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal', {'fields': ('full_name', 'phone')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Status', {'fields': ('status', 'is_email_verified', 'is_2fa_enabled')}),
+        ('Important dates', {'fields': ('last_login', 'created_at', 'updated_at')}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2'),
+        }),
+    )
 
 
 @admin.register(Company)

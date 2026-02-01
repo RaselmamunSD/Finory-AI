@@ -100,7 +100,8 @@
 2. **Create virtual environment**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate
+   "C:/Rasel/perez project/Finory-AI/.venv/Scripts/Activate.ps1"  # On Windows: venv\Scripts\activate
    ```
 
 3. **Install dependencies**
@@ -305,4 +306,4 @@ For support, email support@finoryia.com or create an issue in the repository.
 
 ---
 
-**Built with ❤️ using Django and AI**
+**Built with  using Django and AI**

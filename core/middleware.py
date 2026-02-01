@@ -26,8 +26,10 @@ class TenantMiddleware(MiddlewareMixin):
             user_id = str(request.user.id)
             cache_key = f"user_{user_id}_tenant"
             
-            # Try to get from cache
-            cached_data = cache.get(cache_key)
+            try:
+                cached_data = cache.get(cache_key)
+            except Exception:
+                cached_data = None
             if cached_data:
                 request.tenant = cached_data.get('tenant')
                 request.company_user = cached_data.get('company_user')
@@ -38,10 +40,12 @@ class TenantMiddleware(MiddlewareMixin):
                     request.tenant = company_user.company
                     request.company_user = company_user
                     
-                    # Cache for 1 hour
-                    cache.set(cache_key, {
-                        'tenant': request.tenant,
-                        'company_user': request.company_user
-                    }, 3600)
+                    try:
+                        cache.set(cache_key, {
+                            'tenant': request.tenant,
+                            'company_user': company_user
+                        }, 3600)
+                    except Exception:
+                        pass
         
         return None
