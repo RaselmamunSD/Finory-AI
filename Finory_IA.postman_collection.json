@@ -1,8 +1,9 @@
 {
 	"info": {
 		"name": "Finory IA API",
-		"description": "Complete API collection for Finory IA - Next Generation Financial Intelligence Platform",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"description": "Complete API collection for Finory IA - Next Generation Financial Intelligence Platform with AI-powered features",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"version": "1.0.0"
 	},
 	"item": [
 		{
@@ -12,7 +13,9 @@
 					"name": "Register",
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\",\n  \"company_name\": \"My Company\"\n}"
@@ -21,7 +24,27 @@
 							"raw": "{{base_url}}/api/v1/auth/register/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "register", ""]
-						}
+						},
+						"description": "Register a new user and optionally create a company"
+					}
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"two_factor_code\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login", ""]
+						},
+						"description": "Login with email and password. Include two_factor_code if 2FA is enabled."
 					}
 				},
 				{
@@ -40,7 +63,8 @@
 							"raw": "{{base_url}}/api/v1/auth/verify-email/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "verify-email", ""]
-						}
+						},
+						"description": "Verify email with OTP code received after registration"
 					}
 				},
 				{
@@ -54,30 +78,17 @@
 							"raw": "{{base_url}}/api/v1/auth/resend-otp/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "resend-otp", ""]
-						}
-					}
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"two_factor_code\": \"\"\n}"
 						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/auth/login/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "auth", "login", ""]
-						}
+						"description": "Resend OTP code for email verification"
 					}
 				},
 				{
 					"name": "Refresh Token",
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
@@ -86,7 +97,8 @@
 							"raw": "{{base_url}}/api/v1/auth/refresh/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "refresh", ""]
-						}
+						},
+						"description": "Refresh access token using refresh token"
 					}
 				},
 				{
@@ -100,7 +112,8 @@
 							"raw": "{{base_url}}/api/v1/auth/setup-2fa/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "setup-2fa", ""]
-						}
+						},
+						"description": "Setup 2FA - Returns QR code and secret for authenticator app"
 					}
 				},
 				{
@@ -119,14 +132,37 @@
 							"raw": "{{base_url}}/api/v1/auth/enable-2fa/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "enable-2fa", ""]
-						}
+						},
+						"description": "Enable 2FA by verifying the code from authenticator app"
+					}
+				},
+				{
+					"name": "Verify 2FA",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Content-Type", "value": "application/json"},
+							{"key": "Authorization", "value": "Bearer {{access_token}}"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/verify-2fa/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "verify-2fa", ""]
+						},
+						"description": "Verify 2FA code"
 					}
 				},
 				{
 					"name": "Forgot Password",
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"user@example.com\"\n}"
@@ -135,14 +171,17 @@
 							"raw": "{{base_url}}/api/v1/auth/forgot-password/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "forgot-password", ""]
-						}
+						},
+						"description": "Request password reset OTP"
 					}
 				},
 				{
 					"name": "Reset Password",
 					"request": {
 						"method": "POST",
-						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"header": [
+							{"key": "Content-Type", "value": "application/json"}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"user@example.com\",\n  \"otp_code\": \"123456\",\n  \"new_password\": \"newpassword123\"\n}"
@@ -151,136 +190,253 @@
 							"raw": "{{base_url}}/api/v1/auth/reset-password/",
 							"host": ["{{base_url}}"],
 							"path": ["api", "v1", "auth", "reset-password", ""]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Users",
-			"item": [
-				{
-					"name": "Get My Profile",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/me/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "users", "me", ""]
-						}
-					}
-				},
-				{
-					"name": "Update My Profile",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{"key": "Authorization", "value": "Bearer {{access_token}}"},
-							{"key": "Content-Type", "value": "application/json"}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"full_name\": \"Updated Name\",\n  \"phone\": \"+1234567890\"\n}"
 						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/users/me/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "users", "me", ""]
-						}
+						"description": "Reset password using OTP code"
 					}
 				}
 			]
 		},
 		{
-			"name": "Companies",
+			"name": "Core",
 			"item": [
 				{
-					"name": "List Companies",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/companies/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "companies", ""]
+					"name": "Companies",
+					"item": [
+						{
+							"name": "List Companies",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/companies/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "companies", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Company",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"New Company\",\n  \"tax_id\": \"TAX123456\",\n  \"country\": \"USA\",\n  \"currency\": \"USD\",\n  \"business_model\": \"retail\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/companies/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "companies", ""]
+								}
+							}
+						},
+						{
+							"name": "Get Company",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/companies/:id/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "companies", ":id", ""],
+									"variable": [
+										{"key": "id", "value": ""}
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Company",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Updated Company Name\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/companies/:id/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "companies", ":id", ""],
+									"variable": [
+										{"key": "id", "value": ""}
+									]
+								}
+							}
+						},
+						{
+							"name": "Delete Company",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/companies/:id/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "companies", ":id", ""],
+									"variable": [
+										{"key": "id", "value": ""}
+									]
+								}
+							}
 						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Sales",
-			"item": [
-				{
-					"name": "List Customers",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/sales/customers/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "sales", "customers", ""]
-						}
-					}
+					]
 				},
 				{
-					"name": "List Invoices",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/sales/invoices/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "sales", "invoices", ""]
+					"name": "Users",
+					"item": [
+						{
+							"name": "List Users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", ""]
+								}
+							}
+						},
+						{
+							"name": "Get My Profile",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/me/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", "me", ""]
+								}
+							}
+						},
+						{
+							"name": "Update My Profile",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"full_name\": \"Updated Name\",\n  \"phone\": \"+1234567890\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/me/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", "me", ""]
+								}
+							}
+						},
+						{
+							"name": "Get User",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/:id/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "users", ":id", ""],
+									"variable": [
+										{"key": "id", "value": ""}
+									]
+								}
+							}
 						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Purchases",
-			"item": [
-				{
-					"name": "List Suppliers",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/purchases/suppliers/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "purchases", "suppliers", ""]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Inventory",
-			"item": [
-				{
-					"name": "List Products",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/inventory/products/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "inventory", "products", ""]
-						}
-					}
+					]
 				},
 				{
-					"name": "List Stock",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/inventory/stock/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "inventory", "stock", ""]
+					"name": "Branches",
+					"item": [
+						{
+							"name": "List Branches",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/branches/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "branches", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Branch",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"company\": \"company-id\",\n  \"name\": \"Main Branch\",\n  \"address\": \"123 Main St\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/branches/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "branches", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "List Roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/roles/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "roles", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Company Users",
+					"item": [
+						{
+							"name": "List Company Users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/company-users/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "company-users", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -288,16 +444,423 @@
 			"name": "Accounting",
 			"item": [
 				{
-					"name": "List Chart of Accounts",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/accounting/accounts/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "accounting", "accounts", ""]
+					"name": "Chart of Accounts",
+					"item": [
+						{
+							"name": "List Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/accounting/accounts/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "accounting", "accounts", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Account",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"company\": \"company-id\",\n  \"code\": \"1.1.01\",\n  \"name\": \"Cash Account\",\n  \"account_type\": \"asset\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/accounting/accounts/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "accounting", "accounts", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "Journal Entries",
+					"item": [
+						{
+							"name": "List Journal Entries",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/accounting/journal-entries/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "accounting", "journal-entries", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Journal Entry",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"company\": \"company-id\",\n  \"entry_number\": \"JE-001\",\n  \"date\": \"2024-01-01\",\n  \"description\": \"Initial entry\",\n  \"status\": \"draft\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/accounting/journal-entries/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "accounting", "journal-entries", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Financial Statements",
+					"item": [
+						{
+							"name": "List Financial Statements",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/accounting/financial-statements/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "accounting", "financial-statements", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Sales",
+			"item": [
+				{
+					"name": "Customers",
+					"item": [
+						{
+							"name": "List Customers",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/sales/customers/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sales", "customers", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Customer",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Customer Name\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"credit_limit\": 10000.00\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/sales/customers/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sales", "customers", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Invoices",
+					"item": [
+						{
+							"name": "List Invoices",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/sales/invoices/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sales", "invoices", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Invoice",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"customer\": \"customer-id\",\n  \"invoice_number\": \"INV-001\",\n  \"date\": \"2024-01-01\",\n  \"due_date\": \"2024-01-31\",\n  \"subtotal\": 1000.00,\n  \"tax\": 100.00,\n  \"total\": 1100.00\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/sales/invoices/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sales", "invoices", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Purchases",
+			"item": [
+				{
+					"name": "Suppliers",
+					"item": [
+						{
+							"name": "List Suppliers",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/purchases/suppliers/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "purchases", "suppliers", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Supplier",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Supplier Name\",\n  \"email\": \"supplier@example.com\",\n  \"phone\": \"+1234567890\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/purchases/suppliers/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "purchases", "suppliers", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Purchase Orders",
+					"item": [
+						{
+							"name": "List Purchase Orders",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/purchases/purchase-orders/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "purchases", "purchase-orders", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Purchase Order",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"supplier\": \"supplier-id\",\n  \"order_number\": \"PO-001\",\n  \"date\": \"2024-01-01\",\n  \"subtotal\": 5000.00,\n  \"tax\": 500.00,\n  \"total\": 5500.00\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/purchases/purchase-orders/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "purchases", "purchase-orders", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "Products",
+					"item": [
+						{
+							"name": "List Products",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/inventory/products/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "inventory", "products", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"sku\": \"PROD-001\",\n  \"name\": \"Product Name\",\n  \"description\": \"Product description\",\n  \"unit_of_measure\": \"unit\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/inventory/products/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "inventory", "products", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Warehouses",
+					"item": [
+						{
+							"name": "List Warehouses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/inventory/warehouses/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "inventory", "warehouses", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Stock",
+					"item": [
+						{
+							"name": "List Stock",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/inventory/stock/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "inventory", "stock", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Stock Movements",
+					"item": [
+						{
+							"name": "List Stock Movements",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/inventory/stock-movements/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "inventory", "stock-movements", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Payment Gateways",
+					"item": [
+						{
+							"name": "List Payment Gateways",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments/gateways/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "payments", "gateways", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Payments",
+					"item": [
+						{
+							"name": "List Payments",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments/payments/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "payments", "payments", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Payment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"invoice\": \"invoice-id\",\n  \"amount\": 1100.00,\n  \"currency\": \"USD\",\n  \"payment_method\": \"gateway\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/payments/payments/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "payments", "payments", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -305,16 +868,61 @@
 			"name": "Banking",
 			"item": [
 				{
-					"name": "List Bank Accounts",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/banking/accounts/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "banking", "accounts", ""]
+					"name": "Bank Accounts",
+					"item": [
+						{
+							"name": "List Bank Accounts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/banking/accounts/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "banking", "accounts", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Bank Account",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"account_number\": \"1234567890\",\n  \"bank_name\": \"Bank Name\",\n  \"currency\": \"USD\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/banking/accounts/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "banking", "accounts", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "Bank Transactions",
+					"item": [
+						{
+							"name": "List Bank Transactions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/banking/transactions/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "banking", "transactions", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -322,16 +930,80 @@
 			"name": "CRM",
 			"item": [
 				{
-					"name": "List Leads",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/crm/leads/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "crm", "leads", ""]
+					"name": "Leads",
+					"item": [
+						{
+							"name": "List Leads",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/crm/leads/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "crm", "leads", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Lead",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Lead Name\",\n  \"email\": \"lead@example.com\",\n  \"phone\": \"+1234567890\",\n  \"status\": \"new\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/crm/leads/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "crm", "leads", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "Opportunities",
+					"item": [
+						{
+							"name": "List Opportunities",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/crm/opportunities/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "crm", "opportunities", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Opportunity",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Opportunity Name\",\n  \"stage\": \"prospecting\",\n  \"expected_value\": 50000.00,\n  \"probability\": 25\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/crm/opportunities/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "crm", "opportunities", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -339,14 +1011,159 @@
 			"name": "HR",
 			"item": [
 				{
-					"name": "List Employees",
+					"name": "Employees",
+					"item": [
+						{
+							"name": "List Employees",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/hr/employees/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "hr", "employees", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Employee",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"employee_number\": \"EMP-001\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"position\": \"Manager\",\n  \"hire_date\": \"2024-01-01\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/hr/employees/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "hr", "employees", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Payrolls",
+					"item": [
+						{
+							"name": "List Payrolls",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/hr/payrolls/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "hr", "payrolls", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Contracts",
+					"item": [
+						{
+							"name": "List Contracts",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/hr/contracts/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "hr", "contracts", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Documents",
+			"item": [
+				{
+					"name": "Documents",
+					"item": [
+						{
+							"name": "List Documents",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/documents/documents/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "documents", "documents", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Voice Commands",
+					"item": [
+						{
+							"name": "List Voice Commands",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/documents/voice-commands/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "documents", "voice-commands", ""]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "List Tasks",
 					"request": {
 						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"}
+						],
 						"url": {
-							"raw": "{{base_url}}/api/v1/hr/employees/",
+							"raw": "{{base_url}}/api/v1/tasks/tasks/",
 							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "hr", "employees", ""]
+							"path": ["api", "v1", "tasks", "tasks", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{access_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Task Title\",\n  \"description\": \"Task description\",\n  \"priority\": \"high\",\n  \"status\": \"pending\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tasks/tasks/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "tasks", "tasks", ""]
 						}
 					}
 				}
@@ -356,16 +1173,42 @@
 			"name": "Identity",
 			"item": [
 				{
-					"name": "List Identities",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/identity/identities/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "identity", "identities", ""]
+					"name": "Identities",
+					"item": [
+						{
+							"name": "List Identities",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/identity/identities/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "identity", "identities", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "Face Verifications",
+					"item": [
+						{
+							"name": "List Verifications",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/identity/verifications/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "identity", "verifications", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -373,16 +1216,80 @@
 			"name": "Legal",
 			"item": [
 				{
-					"name": "List Incidents",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/legal/incidents/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "legal", "incidents", ""]
+					"name": "Incidents",
+					"item": [
+						{
+							"name": "List Incidents",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/legal/incidents/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "legal", "incidents", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Incident",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"category\": \"fraud\",\n  \"description\": \"Incident description\",\n  \"severity\": \"high\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/legal/incidents/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "legal", "incidents", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "Legal Reports",
+					"item": [
+						{
+							"name": "List Legal Reports",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/legal/legal-reports/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "legal", "legal-reports", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Blacklist",
+					"item": [
+						{
+							"name": "List Blacklist",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/legal/blacklist/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "legal", "blacklist", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -390,16 +1297,61 @@
 			"name": "AI Engine",
 			"item": [
 				{
-					"name": "List AI Predictions",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/ai/predictions/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "ai", "predictions", ""]
+					"name": "AI Models",
+					"item": [
+						{
+							"name": "List AI Models",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/ai/models/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "ai", "models", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "AI Predictions",
+					"item": [
+						{
+							"name": "List AI Predictions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/ai/predictions/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "ai", "predictions", ""]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "AI Recommendations",
+					"item": [
+						{
+							"name": "List AI Recommendations",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/ai/recommendations/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "ai", "recommendations", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		},
@@ -407,16 +1359,80 @@
 			"name": "Analytics",
 			"item": [
 				{
-					"name": "List Dashboards",
-					"request": {
-						"method": "GET",
-						"header": [{"key": "Authorization", "value": "Bearer {{access_token}}"}],
-						"url": {
-							"raw": "{{base_url}}/api/v1/analytics/dashboards/",
-							"host": ["{{base_url}}"],
-							"path": ["api", "v1", "analytics", "dashboards", ""]
+					"name": "Dashboards",
+					"item": [
+						{
+							"name": "List Dashboards",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/analytics/dashboards/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "analytics", "dashboards", ""]
+								}
+							}
+						},
+						{
+							"name": "Create Dashboard",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Main Dashboard\",\n  \"description\": \"Primary analytics dashboard\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/analytics/dashboards/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "analytics", "dashboards", ""]
+								}
+							}
 						}
-					}
+					]
+				},
+				{
+					"name": "KPIs",
+					"item": [
+						{
+							"name": "List KPIs",
+							"request": {
+								"method": "GET",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/analytics/kpis/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "analytics", "kpis", ""]
+								}
+							}
+						},
+						{
+							"name": "Create KPI",
+							"request": {
+								"method": "POST",
+								"header": [
+									{"key": "Authorization", "value": "Bearer {{access_token}}"},
+									{"key": "Content-Type", "value": "application/json"}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Revenue Growth\",\n  \"description\": \"Monthly revenue growth percentage\",\n  \"formula\": \"(current_revenue - previous_revenue) / previous_revenue * 100\",\n  \"target_value\": 10.0\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/analytics/kpis/",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "analytics", "kpis", ""]
+								}
+							}
+						}
+					]
 				}
 			]
 		}
