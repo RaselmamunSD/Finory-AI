@@ -2,10 +2,10 @@
 Documents module URLs
 """
 from django.urls import path
-from rest_framework import routers
+from rest_framework.routers import SimpleRouter
 from . import views
 
-router = routers.DefaultRouter()
+router = SimpleRouter()
 router.register(r'documents', views.DocumentViewSet, basename='document')
 router.register(r'voice-commands', views.VoiceCommandViewSet, basename='voice-command')
 

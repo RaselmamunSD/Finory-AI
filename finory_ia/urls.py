@@ -8,6 +8,11 @@ from django.conf.urls.static import static
 from api.views.root_view import api_root
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+# Customize admin site
+admin.site.site_header = 'Finory IA Administration'
+admin.site.site_title = 'Finory IA Admin'
+admin.site.index_title = 'Welcome to Finory IA Administration'
+
 urlpatterns = [
     path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),

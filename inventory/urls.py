@@ -2,10 +2,10 @@
 Inventory module URLs
 """
 from django.urls import path
-from rest_framework import routers
+from rest_framework.routers import SimpleRouter
 from . import views
 
-router = routers.DefaultRouter()
+router = SimpleRouter()
 router.register(r'products', views.ProductViewSet, basename='product')
 router.register(r'warehouses', views.WarehouseViewSet, basename='warehouse')
 router.register(r'stock', views.StockViewSet, basename='stock')

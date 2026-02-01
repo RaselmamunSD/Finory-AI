@@ -10,3 +10,6 @@ qrcode==7.4.2
 pytest==7.4.3
 pytest-django==4.7.0
 faker==20.1.0
+redis==5.0.1
+hiredis==2.2.3
+celery==5.3.4

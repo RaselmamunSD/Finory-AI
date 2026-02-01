@@ -2,10 +2,10 @@
 Sales module URLs
 """
 from django.urls import path
-from rest_framework import routers
+from rest_framework.routers import SimpleRouter
 from . import views
 
-router = routers.DefaultRouter()
+router = SimpleRouter()
 router.register(r'customers', views.CustomerViewSet, basename='customer')
 router.register(r'invoices', views.InvoiceViewSet, basename='invoice')
 

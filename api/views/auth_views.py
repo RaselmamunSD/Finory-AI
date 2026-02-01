@@ -1,7 +1,7 @@
 """
 Authentication views
 """
-from rest_framework import status, generics, permissions
+from rest_framework import status, generics, permissions, serializers
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -14,10 +14,43 @@ from io import BytesIO
 import base64
 
 
+# Serializers for API documentation
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    two_factor_code = serializers.CharField(required=False, allow_blank=True)
+
+
+class RegisterSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    full_name = serializers.CharField(required=False, allow_blank=True)
+    company_name = serializers.CharField(required=False, allow_blank=True)
+
+
+class OTPVerifySerializer(serializers.Serializer):
+    otp_code = serializers.CharField()
+
+
+class TwoFactorSerializer(serializers.Serializer):
+    code = serializers.CharField()
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp_code = serializers.CharField()
+    new_password = serializers.CharField(write_only=True)
+
+
 class LoginView(TokenObtainPairView):
     """
     Custom login view with 2FA support
     """
+    serializer_class = LoginSerializer
     
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
@@ -109,6 +142,7 @@ class RegisterView(generics.CreateAPIView):
     User registration view
     """
     permission_classes = [permissions.AllowAny]
+    serializer_class = RegisterSerializer
     
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
@@ -186,6 +220,7 @@ class VerifyEmailOTPView(generics.GenericAPIView):
     Verify email OTP view
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OTPVerifySerializer
     
     def post(self, request, *args, **kwargs):
         otp_code = request.data.get('otp_code')
@@ -218,6 +253,7 @@ class ResendOTPView(generics.GenericAPIView):
     Resend OTP view
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.Serializer  # No input required
     
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -236,6 +272,7 @@ class Verify2FAView(generics.GenericAPIView):
     Verify 2FA code view
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = TwoFactorSerializer
     
     def post(self, request, *args, **kwargs):
         code = request.data.get('code')
@@ -271,6 +308,7 @@ class Setup2FAView(generics.GenericAPIView):
     Setup 2FA view - generates secret and QR code
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.Serializer  # No input required
     
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -312,6 +350,7 @@ class Enable2FAView(generics.GenericAPIView):
     Enable 2FA view - verifies code and enables 2FA
     """
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = TwoFactorSerializer
     
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -349,6 +388,7 @@ class ForgotPasswordView(generics.GenericAPIView):
     Forgot password view - sends OTP to email
     """
     permission_classes = [permissions.AllowAny]
+    serializer_class = ForgotPasswordSerializer
     
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
@@ -383,6 +423,7 @@ class ResetPasswordView(generics.GenericAPIView):
     Reset password view using OTP
     """
     permission_classes = [permissions.AllowAny]
+    serializer_class = ResetPasswordSerializer
     
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')

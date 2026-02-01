@@ -200,20 +200,111 @@ CORS_ALLOWED_ORIGINS = config(
 )
 CORS_ALLOW_CREDENTIALS = True
 
-# Cache Configuration (Redis optional; use dummy cache if Redis unavailable)
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': config('CACHE_URL', default='redis://127.0.0.1:6379/1'),
-    },
-    'dummy': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-    },
-}
+# Cache Configuration with Redis
+# Redis connection URL format: redis://[:password]@host:port/db
+# Example: redis://:password@localhost:6379/1
+# For Redis with password: redis://:mypassword@127.0.0.1:6379/1
+# For Redis without password: redis://127.0.0.1:6379/1
 
-# Session: use database so admin works without Redis; set SESSION_ENGINE=cache for production
-SESSION_ENGINE = config('SESSION_ENGINE', default='django.contrib.sessions.backends.db')
-SESSION_CACHE_ALIAS = "default"
+REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/1')
+REDIS_CACHE_URL = config('CACHE_URL', default=REDIS_URL)
+
+# Try to configure Redis cache, fallback to database cache if Redis unavailable
+try:
+    import redis
+    
+    # Test Redis connection
+    _redis_test = redis.from_url(REDIS_CACHE_URL, socket_connect_timeout=2)
+    _redis_test.ping()
+    _redis_test.close()
+    
+    # Configure Redis cache with Django's built-in backend
+    # Django 4.0+ has built-in Redis support
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_CACHE_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django.core.cache.backends.redis.client.DefaultClient',
+            },
+            'KEY_PREFIX': 'finory_cache',
+            'TIMEOUT': 300,  # Default timeout in seconds (5 minutes)
+        },
+        'session': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': config('SESSION_CACHE_URL', default=REDIS_URL.replace('/1', '/2')),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django.core.cache.backends.redis.client.DefaultClient',
+            },
+            'KEY_PREFIX': 'finory_session',
+        },
+        'dummy': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        },
+    }
+except Exception as e:
+    # Fallback to database cache if Redis is not available
+    # This handles both ImportError (redis not installed) and ConnectionError (Redis not running)
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.warning(f'Redis not available, using database cache: {e}')
+    
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'cache_table',
+        },
+        'session': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'session_cache_table',
+        },
+        'dummy': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        },
+    }
+
+# Session Configuration
+# Options:
+# - 'django.contrib.sessions.backends.cache' - Use Redis cache (recommended for production)
+# - 'django.contrib.sessions.backends.cached_db' - Use cache with DB fallback (best of both)
+# - 'django.contrib.sessions.backends.db' - Use database only (fallback if Redis unavailable)
+
+# Determine session engine based on Redis availability
+# If Redis is not available, use database sessions to avoid cache table dependency issues
+_use_redis_sessions = False
+try:
+    import redis
+    _redis_test = redis.from_url(REDIS_CACHE_URL, socket_connect_timeout=1)
+    _redis_test.ping()
+    _redis_test.close()
+    _use_redis_sessions = True
+except Exception:
+    pass
+
+if _use_redis_sessions:
+    SESSION_ENGINE = config(
+        'SESSION_ENGINE',
+        default='django.contrib.sessions.backends.cached_db'  # Cache with DB fallback
+    )
+    if 'cache' in SESSION_ENGINE:
+        SESSION_CACHE_ALIAS = config('SESSION_CACHE_ALIAS', default='session')
+    else:
+        SESSION_CACHE_ALIAS = None
+else:
+    # Fallback to database sessions when Redis is not available
+    SESSION_ENGINE = config(
+        'SESSION_ENGINE',
+        default='django.contrib.sessions.backends.db'
+    )
+    SESSION_CACHE_ALIAS = None
+
+# Session security settings
+SESSION_COOKIE_AGE = config('SESSION_COOKIE_AGE', default=86400, cast=int)  # 24 hours
+SESSION_COOKIE_SECURE = config('SESSION_COOKIE_SECURE', default=False, cast=bool)  # True in production with HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
+SESSION_COOKIE_SAMESITE = config('SESSION_COOKIE_SAMESITE', default='Lax')  # Lax, Strict, or None
+SESSION_SAVE_EVERY_REQUEST = config('SESSION_SAVE_EVERY_REQUEST', default=False, cast=bool)  # Save on every request
+SESSION_EXPIRE_AT_BROWSER_CLOSE = config('SESSION_EXPIRE_AT_BROWSER_CLOSE', default=False, cast=bool)
 
 # Celery Configuration (for async AI tasks)
 CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')
